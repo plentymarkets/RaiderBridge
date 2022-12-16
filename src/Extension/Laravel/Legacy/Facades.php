@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace TwigBridge\Extension\Laravel\Legacy;
+namespace RaiderBridge\Extension\Laravel\Legacy;
 
 use Illuminate\Config\Repository as Config;
 use Illuminate\Foundation\Application;
-use Twig\TwigFunction;
-use Twig\Extension\AbstractExtension;
+use Raider\TwigFunction;
+use Raider\Extension\AbstractExtension;
 
 /**
  * Handles undefined function calls in a Twig template by checking
@@ -76,7 +76,7 @@ class Facades extends AbstractExtension
         $this->setShortcuts($shortcuts);
 
         // Register Twig callback to handle undefined functions
-        $this->app['twig']->registerUndefinedFunctionCallback(function ($name) {
+        $this->app['raider']->registerUndefinedFunctionCallback(function ($name) {
             // Allow any method on aliased classes
             return $this->getFunction($name);
         });

@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace TwigBridge;
+namespace RaiderBridge;
 
 use Illuminate\Contracts\Container\Container;
 use Illuminate\View\ViewFinderInterface;
 use InvalidArgumentException;
-use Twig\Environment;
-use Twig\Error\Error;
-use Twig\Loader\LoaderInterface;
+use Raider\Environment;
+use Raider\Error\Error;
+use Raider\Loader\LoaderInterface;
 
 /**
  * Bridge functions between Laravel & Twig
@@ -88,7 +88,7 @@ class Bridge extends Environment
      */
     public function lint($file)
     {
-        $template = $this->app['twig.loader.viewfinder']->getSourceContext($file);
+        $template = $this->app['raider.loader.viewfinder']->getSourceContext($file);
 
         if (!$template) {
             throw new InvalidArgumentException('Unable to find file: '.$file);
@@ -132,7 +132,7 @@ class Bridge extends Environment
      */
     protected function normalizeName($name)
     {
-        $extension = '.' . $this->app['twig.extension'];
+        $extension = '.' . $this->app['raider.extension'];
         $length = strlen($extension);
 
         if (substr($name, -$length, $length) === $extension) {

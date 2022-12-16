@@ -8,15 +8,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace TwigBridge\Facade;
+namespace RaiderBridge\Facade;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Twig\Environment
- * @see \TwigBridge\Bridge
+ * @see \Raider\Environment
+ * @see \RaiderBridge\Bridge
  */
-class Twig extends Facade
+class Raider extends Facade
 {
     /**
      * Get the registered name of the component.
@@ -25,6 +25,6 @@ class Twig extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'twig';
+        return 'raider';
     }
 }

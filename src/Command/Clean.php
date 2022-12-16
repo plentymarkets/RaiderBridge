@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace TwigBridge\Command;
+namespace RaiderBridge\Command;
 
 use Illuminate\Console\Command;
 use Twig_Environment;
@@ -35,7 +35,7 @@ class Clean extends Command
      */
     public function handle()
     {
-        $twig     = $this->laravel['twig'];
+        $twig     = $this->laravel['raider'];
         $files    = $this->laravel['files'];
         $cacheDir = $twig->getCache();
 

@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace TwigBridge\Extension\Loader;
+namespace RaiderBridge\Extension\Loader;
 
 use Illuminate\Contracts\Config\Repository as Config;
-use Twig\Extension\AbstractExtension;
+use Raider\Extension\AbstractExtension;
 
 /**
  * Base loader extension.
@@ -23,6 +23,8 @@ use Twig\Extension\AbstractExtension;
  */
 abstract class Loader extends AbstractExtension
 {
+    protected $config;
+
     /**
      * Create a new loader extension.
      *

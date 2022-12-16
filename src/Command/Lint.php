@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace TwigBridge\Command;
+namespace RaiderBridge\Command;
 
 use Illuminate\Console\Command;
 use InvalidArgumentException;
@@ -17,8 +17,8 @@ use RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Finder\Finder;
-use Twig\Error\Error;
-use Twig\Error\LoaderError;
+use Raider\Error\Error;
+use Raider\Error\LoaderError;
 
 /**
  * Artisan command to check the syntax of Twig templates.
@@ -41,7 +41,7 @@ class Lint extends Command
     protected $description = 'Lints Twig templates';
 
     /**
-     * @var \TwigBridge\Bridge
+     * @var \RaiderBridge\Bridge
      */
     protected $twig;
 
@@ -61,7 +61,7 @@ class Lint extends Command
     {
         $finder = (empty($this->finder)) ? Finder::create() : $this->finder;
 
-        return $finder->files()->in($paths)->name('*.'.$this->laravel['twig.extension']);
+        return $finder->files()->in($paths)->name('*.'.$this->laravel['raider.extension']);
     }
 
     /**
@@ -81,7 +81,7 @@ class Lint extends Command
      */
     public function handle()
     {
-        $this->twig = $this->laravel['twig'];
+        $this->twig = $this->laravel['raider'];
         $format     = $this->option('format');
 
         // Check STDIN for the template
@@ -171,7 +171,7 @@ class Lint extends Command
      */
     protected function getContents($file)
     {
-        return $this->laravel['twig.loader']->getSourceContext($file);
+        return $this->laravel['raider.loader']->getSourceContext($file);
     }
 
     /**

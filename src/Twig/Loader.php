@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace TwigBridge\Twig;
+namespace RaiderBridge\Twig;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\View\ViewFinderInterface;
 use InvalidArgumentException;
-use Twig\Source;
-use Twig\Error\LoaderError;
-use Twig\Loader\LoaderInterface;
+use Raider\Source;
+use Raider\Error\LoaderError;
+use Raider\Loader\LoaderInterface;
 
 /**
  * Basic loader using absolute paths.
@@ -48,7 +48,7 @@ class Loader implements LoaderInterface
      * @param \Illuminate\View\ViewFinderInterface  $finder
      * @param string                                $extension Twig file extension.
      */
-    public function __construct(Filesystem $files, ViewFinderInterface $finder, $extension = 'twig')
+    public function __construct(Filesystem $files, ViewFinderInterface $finder, $extension = 'raider')
     {
         $this->files     = $files;
         $this->finder    = $finder;
@@ -137,5 +137,15 @@ class Loader implements LoaderInterface
     public function isFresh($name, $time)
     {
         return $this->files->lastModified($this->findTemplate($name)) <= $time;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSource($name)
+    {
+        $path = $this->findTemplate($name);
+
+        return $this->files->get($path);
     }
 }
