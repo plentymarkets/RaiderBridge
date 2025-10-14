@@ -23,7 +23,7 @@ use TwigBridge\Tests\TwigBridgeTestTrait;
  * It should contains a json containing the expected events creating and composing counts for each template.
  *
  */
-class TwigtIntegrationTest extends IntegrationTestCase
+class TwigIntegrationTest extends IntegrationTestCase
 {
     use TwigBridgeTestTrait;
 
@@ -112,11 +112,6 @@ class TwigtIntegrationTest extends IntegrationTestCase
                 $twig->addFunction($function);
             }
 
-            // avoid using the same PHP class name for different cases
-            $p = new \ReflectionProperty(Environment::class, 'templateClassPrefix');
-            $p->setAccessible(true);
-            $p->setValue($twig, '__TwigTemplate_' . hash('sha256', uniqid(mt_rand(), true), false) . '_');
-
             $deprecations = [];
             try {
                 $prevHandler = set_error_handler(
@@ -200,9 +195,11 @@ class TwigtIntegrationTest extends IntegrationTestCase
     {
         $extensionsConfig = [
             'enabled' => [
+                'TwigBridge\Extension\Laravel\Event',
                 'TwigBridge\Extension\Loader\Facades',
                 'TwigBridge\Extension\Loader\Filters',
                 'TwigBridge\Extension\Loader\Functions',
+                'TwigBridge\Extension\Loader\Globals',
             ],
         ];
         $laravelApp = $this->getApplication(['extensions' => $extensionsConfig]);

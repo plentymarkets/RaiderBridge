@@ -28,6 +28,11 @@ use Raider\Extension\AbstractExtension;
  */
 class Dump extends AbstractExtension
 {
+    /**
+     * @var \Symfony\Component\VarDumper\Cloner\VarCloner
+     */
+    protected $cloner;
+
     public function __construct()
     {
         $this->cloner = new VarCloner();

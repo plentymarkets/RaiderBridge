@@ -13,13 +13,14 @@ namespace RaiderBridge;
 
 use Illuminate\View\ViewServiceProvider;
 use InvalidArgumentException;
+use Raider\Environment;
 use Raider\Lexer;
 use Raider\Extension\DebugExtension;
 use Raider\Extension\ExtensionInterface;
 use Raider\Extension\EscaperExtension;
 use Raider\Loader\ArrayLoader;
 use Raider\Loader\ChainLoader;
-use Twig_Environment;
+use Raider\RuntimeLoader\ContainerRuntimeLoader;
 
 /**
  * Bootstrap Laravel TwigBridge.
@@ -234,6 +235,9 @@ class ServiceProvider extends ViewServiceProvider
                     $twig->getExtension(EscaperExtension::class)->addSafeClass($safeClass, $strategy);
                 }
 
+                // Register container-based runtime extension loader
+                $twig->addRuntimeLoader(new ContainerRuntimeLoader($this->app));
+
                 // Instantiate and add extensions
                 foreach ($extensions as $extension) {
                     // Get an instance of the extension
@@ -265,7 +269,7 @@ class ServiceProvider extends ViewServiceProvider
             true
         );
 
-        $this->app->alias('raider', Twig_Environment::class);
+        $this->app->alias('raider', Environment::class);
         $this->app->alias('raider', Bridge::class);
 
         $this->app->bindIf('raider.compiler', function () {

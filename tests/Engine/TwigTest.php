@@ -2,16 +2,16 @@
 
 namespace TwigBridge\Tests\Engine;
 
+use Twig\Environment;
+use Twig\Loader\ArrayLoader;
 use TwigBridge\Tests\Base;
 use Mockery as m;
 use TwigBridge\Engine\Twig as Engine;
 use TwigBridge\Engine\Compiler;
-use Twig_Environment;
-use Twig_Loader_Array;
 
 class TwigTest extends Base
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }
@@ -20,7 +20,7 @@ class TwigTest extends Base
     {
         $viewfinder = m::mock('TwigBridge\Twig\Loader');
         $global   = array('name' => 'Rob');
-        $compiler = new Compiler(new Twig_Environment(new Twig_Loader_Array));
+        $compiler = new Compiler(new Environment(new ArrayLoader));
         $engine   = new Engine($compiler, $viewfinder, $global);
 
         $this->assertInstanceOf('Illuminate\View\Engines\CompilerEngine', $engine);
@@ -31,7 +31,7 @@ class TwigTest extends Base
     {
         $viewfinder = m::mock('TwigBridge\Twig\Loader');
         $global   = array('package' => 'TwigBridge');
-        $compiler = new Compiler(new Twig_Environment(new Twig_Loader_Array));
+        $compiler = new Compiler(new Environment(new ArrayLoader));
         $engine   = new Engine($compiler, $viewfinder);
 
         $engine->setGlobalData($global);

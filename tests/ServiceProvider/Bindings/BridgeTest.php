@@ -2,9 +2,11 @@
 
 namespace TwigBridge\Tests\ServiceProvider\Bindings;
 
-use TwigBridge\Tests\Base;
 use Mockery as m;
+use Twig\Lexer;
 use TwigBridge\ServiceProvider;
+use TwigBridge\Tests\Base;
+use TwigBridge\Tests\Helpers;
 
 class BridgeTest extends Base
 {
@@ -23,7 +25,7 @@ class BridgeTest extends Base
     public function testSetLexer()
     {
         $app = $this->getApplication();
-        $app['twig.lexer'] = m::mock('Twig_Lexer');
+        $app['twig.lexer'] = m::mock(Lexer::class);
         $app['twig.lexer']->shouldReceive('fooBar')->andReturn('baz');
         $app['twig.extensions'] = [];
 
@@ -31,7 +33,7 @@ class BridgeTest extends Base
         $provider->register();
         $provider->boot();
 
-        $this->assertEquals($this->readAttribute($app['twig'], 'lexer')->fooBar(), 'baz');
+        $this->assertEquals(Helpers::readObjectAttribute($app['twig'], 'lexer')->fooBar(), 'baz');
     }
 
     public function testAddExtensions()

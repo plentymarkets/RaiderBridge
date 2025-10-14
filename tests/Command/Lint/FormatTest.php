@@ -59,22 +59,25 @@ class FormatTest extends Base
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testInvalidFormat()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $command = new Lint;
         $app     = $this->getApplication();
 
         $command->setLaravel($app);
 
-        $finder = m::mock('Symfony\Component\Finder\Finder');
+        /** @var \Symfony\Component\Finder\Finder|\Mockery\MockInterface $finder */
+        $finder = m::mock('Symfony\Component\Finder\Finder')->makePartial();
         $finder->shouldReceive('files')->andReturn($finder);
         $finder->shouldReceive('in')->andReturn($finder);
-        $finder->shouldReceive('name')->andReturn([]);
+        $finder->shouldReceive('name')->andReturn($finder);
         $command->setFinder($finder);
 
-        $input  = new ArrayInput([
+        $input = new ArrayInput([
             '--format' => 'foo'
         ]);
         $output = m::mock('Symfony\Component\Console\Output\NullOutput')->makePartial();
