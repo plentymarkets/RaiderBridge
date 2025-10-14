@@ -2,9 +2,10 @@
 
 namespace TwigBridge\Tests\Extension\Laravel;
 
-use TwigBridge\Tests\Base;
 use Mockery as m;
+use Twig\Node\Node;
 use TwigBridge\Extension\Laravel\Url;
+use TwigBridge\Tests\Base;
 
 class UrlTest extends Base
 {
@@ -16,14 +17,14 @@ class UrlTest extends Base
         'secure_asset',
     ];
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }
 
     public function testName()
     {
-        $this->assertInternalType('string', $this->getUrl()->getName());
+        $this->assertTrue(is_string($this->getUrl()->getName()));
     }
 
     public function testCustomFunctions()
@@ -31,7 +32,7 @@ class UrlTest extends Base
         $url       = $this->getUrl();
         $functions = $url->getFunctions();
 
-        $this->assertInternalType('array', $functions);
+        $this->assertTrue(is_array($functions));
 
         foreach ($functions as $function) {
             if (!in_array($function->getName(), $this->customFunctions)) {
@@ -82,7 +83,7 @@ class UrlTest extends Base
     {
         $url       = $this->getUrl();
         $functions = $url->getFunctions();
-        $mock      = m::mock('Twig_Node');
+        $mock      = m::mock(Node::class);
 
         foreach ($functions as $function) {
             if (is_a($function->getCallable(), 'Closure')) {

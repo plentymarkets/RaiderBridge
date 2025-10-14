@@ -21,7 +21,7 @@ class GetAttrAdjuster implements NodeVisitorInterface
     /**
      * @inheritdoc
      */
-    public function enterNode(\Twig_NodeInterface $node, Environment $env)
+    public function enterNode(\Twig_NodeInterface $node, Environment $env): \Twig_NodeInterface
     {
         // Make sure this is a GetAttrExpression (and not a subclass)
         if (get_class($node) !== GetAttrExpression::class) {
@@ -40,18 +40,21 @@ class GetAttrAdjuster implements NodeVisitorInterface
 
         $attributes = [
             'type' => $node->getAttribute('type'),
-            'is_defined_test' => $node->getAttribute('is_defined_test'),
             'ignore_strict_check' => $node->getAttribute('ignore_strict_check'),
             'optimizable' => $node->getAttribute('optimizable'),
         ];
 
-        return new GetAttrNode($nodes, $attributes, $node->getTemplateLine(), $node->getNodeTag());
+        $newNode = new GetAttrNode($nodes, $attributes, $node->getTemplateLine());
+
+        $node->isDefinedTestEnabled() && $newNode->enableDefinedTest();
+
+        return $newNode;
     }
 
     /**
      * @inheritdoc
      */
-    public function leaveNode(\Twig_NodeInterface $node, Environment $env)
+    public function leaveNode(\Twig_NodeInterface $node, Environment $env): ?\Twig_NodeInterface
     {
         return $node;
     }

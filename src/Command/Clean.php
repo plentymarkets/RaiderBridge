@@ -12,8 +12,6 @@
 namespace RaiderBridge\Command;
 
 use Illuminate\Console\Command;
-use Twig_Environment;
-use Illuminate\Filesystem\Filesystem;
 
 /**
  * Artisan command to clear the Twig cache.

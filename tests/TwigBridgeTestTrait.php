@@ -14,12 +14,12 @@ trait TwigBridgeTestTrait
     protected $twigBridgeRoot;
 
 
-    public function setup()
+    public function setUp(): void
     {
         $this->twigBridgeRoot = realpath(__DIR__ . '/../src');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }
@@ -32,8 +32,7 @@ trait TwigBridgeTestTrait
      */
     protected function getApplication(array $customConfig = [])
     {
-        $app = new Application;
-        $app->instance('path', __DIR__);
+        $app = new Application(__DIR__);
 
         $app['env'] = 'production';
         $app['path.config'] = __DIR__ . '/config';

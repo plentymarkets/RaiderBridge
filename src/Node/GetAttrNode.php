@@ -7,9 +7,11 @@
  */
 namespace RaiderBridge\Node;
 
+use Raider\Attribute\YieldReady;
 use Raider\Compiler;
 use Raider\Environment;
 use Raider\Error\RuntimeError;
+use Raider\Extension\CoreExtension;
 use Raider\Extension\SandboxExtension;
 use Raider\Node\Expression\GetAttrExpression;
 use Raider\Node\Node;
@@ -23,29 +25,29 @@ use Raider\Template;
  *  - https://github.com/rcrowe/TwigBridge/issues/362
  *  - https://github.com/rcrowe/TwigBridge/issues/265
  */
+#[YieldReady]
 class GetAttrNode extends GetAttrExpression
 {
     /**
      * @inheritdoc
      */
-    public function __construct(array $nodes = [], array $attributes = [], int $lineno = 0, string $tag = null)
+    public function __construct(array $nodes = [], array $attributes = [], int $lineno = 0)
     {
         // Skip parent::__construct()
-        Node::__construct($nodes, $attributes, $lineno, $tag);
+        Node::__construct($nodes, $attributes, $lineno);
     }
 
     /**
      * @inheritdoc
      */
-    public function compile(Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $env = $compiler->getEnvironment();
 
         // optimize array calls
-        if (
-            $this->getAttribute('optimizable')
+        if ($this->getAttribute('optimizable')
             && (!$env->isStrictVariables() || $this->getAttribute('ignore_strict_check'))
-            && !$this->getAttribute('is_defined_test')
+            && !$this->isDefinedTestEnabled()
             && Template::ARRAY_CALL === $this->getAttribute('type')
         ) {
             $var = '$'.$compiler->getVarName();
@@ -89,7 +91,7 @@ class GetAttrNode extends GetAttrExpression
 
         $compiler->raw(', ')
             ->repr($this->getAttribute('type'))
-            ->raw(', ')->repr($this->getAttribute('is_defined_test'))
+            ->raw(', ')->repr($this->isDefinedTestEnabled())
             ->raw(', ')->repr($this->getAttribute('ignore_strict_check'))
             ->raw(', ')->repr($env->hasExtension(SandboxExtension::class))
             ->raw(', ')->repr($this->getNode('node')->getTemplateLine())
@@ -129,7 +131,10 @@ class GetAttrNode extends GetAttrExpression
         $sandboxed = false,
         int $lineno = -1
     ) {
-        if (Template::METHOD_CALL !== $type and (is_a($object, 'Illuminate\Database\Eloquent\Model') || is_a($object, 'Livewire\Component'))) {
+
+        if (Template::METHOD_CALL !== $type
+            && (is_a($object, 'Illuminate\Database\Eloquent\Model') || is_a($object, 'Livewire\Component'))
+        ) {
             // We can't easily find out if an attribute actually exists, so return true
             if ($isDefinedTest) {
                 return true;
@@ -143,7 +148,7 @@ class GetAttrNode extends GetAttrExpression
             return $object->$item;
         }
 
-        return \twig_get_attribute(
+        return CoreExtension::getAttribute(
             $env,
             $source,
             $object,
@@ -151,9 +156,7 @@ class GetAttrNode extends GetAttrExpression
             $arguments,
             $type,
             $isDefinedTest,
-            $ignoreStrictCheck,
-            $sandboxed,
-            $lineno
+            $ignoreStrictCheck
         );
     }
 }

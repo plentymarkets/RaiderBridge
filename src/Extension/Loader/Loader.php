@@ -26,6 +26,11 @@ abstract class Loader extends AbstractExtension
     protected $config;
 
     /**
+     * @var \Illuminate\Config\Repository
+     */
+    protected $config;
+
+    /**
      * Create a new loader extension.
      *
      * @param \Illuminate\Config\Repository

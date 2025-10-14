@@ -15,8 +15,7 @@ use Exception;
 use Illuminate\View\Compilers\CompilerInterface;
 use InvalidArgumentException;
 use Raider\Environment;
-use Raider\LoaderError;
-use RaiderBridge\Twig\Template;
+use Raider\TemplateWrapper;
 
 /**
  * Compiles Twig templates.
@@ -88,6 +87,7 @@ class Compiler implements CompilerInterface
      *
      * @param string $path
      *
+     * @return TemplateWrapper
      * @throws \InvalidArgumentException
      *
      * @return string \RaiderBridge\Twig\Template
@@ -96,16 +96,11 @@ class Compiler implements CompilerInterface
     {
         // Load template
         try {
-            $template = $this->twig->loadTemplate($path);
-        } catch (LoaderError $e) {
+            $tmplWrapper = $this->twig->load($path);
+        } catch (Exception $e) {
             throw new InvalidArgumentException("Error loading $path: ". $e->getMessage(), $e->getCode(), $e);
         }
 
-        if ($template instanceof Template) {
-            // Events are already fired by the View Environment
-            $template->setFiredEvents(true);
-        }
-
-        return $template;
+        return $tmplWrapper;
     }
 }

@@ -111,9 +111,11 @@ return [
         |
         */
         'enabled' => [
+            'RaiderBridge\Extension\Laravel\Event',
             'RaiderBridge\Extension\Loader\Facades',
             'RaiderBridge\Extension\Loader\Filters',
             'RaiderBridge\Extension\Loader\Functions',
+            'RaiderBridge\Extension\Loader\Globals',
 
             'RaiderBridge\Extension\Laravel\Auth',
             'RaiderBridge\Extension\Laravel\Config',
@@ -125,6 +127,7 @@ return [
             'RaiderBridge\Extension\Laravel\Url',
             'RaiderBridge\Extension\Laravel\Model',
             // 'RaiderBridge\Extension\Laravel\Gate',
+            'RaiderBridge\Extension\Laravel\Vite',
 
             // 'RaiderBridge\Extension\Laravel\Form',
             // 'RaiderBridge\Extension\Laravel\Html',
