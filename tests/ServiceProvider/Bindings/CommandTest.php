@@ -2,15 +2,16 @@
 
 namespace TwigBridge\Tests\ServiceProvider\Bindings;
 
-use TwigBridge\Tests\Base;
 use TwigBridge\ServiceProvider;
+use TwigBridge\Tests\Base;
 
 class CommandTest extends Base
 {
     protected $app;
 
-    public function setUp()
+    public function setUp(): void
     {
+        parent::setup();
         $this->app = $this->getApplication();
 
         $provider = new ServiceProvider($this->app);

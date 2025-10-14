@@ -1,14 +1,13 @@
-Allows you to use [Twig](http://twig.sensiolabs.org/) seamlessly in [Laravel 5](http://laravel.com/).
+Allows you to use [Twig](http://twig.sensiolabs.org/) seamlessly in [Laravel](http://laravel.com/).
 
 [![Latest Stable Version](https://poser.pugx.org/rcrowe/twigbridge/v/stable.png)](https://packagist.org/packages/rcrowe/twigbridge)
 [![Total Downloads](https://poser.pugx.org/rcrowe/twigbridge/downloads.png)](https://packagist.org/packages/rcrowe/twigbridge)
+[![test](https://github.com/rcrowe/TwigBridge/actions/workflows/ci.yml/badge.svg)](https://github.com/rcrowe/TwigBridge/actions/workflows/ci.yml)
 [![License](https://poser.pugx.org/rcrowe/twigbridge/license.png)](https://packagist.org/packages/rcrowe/twigbridge)
 
 # Requirements
 
-TwigBridge >=0.7 requires Laravel 5.
-
-If you need to support for Laravel 4.1/4.2 checkout out TwigBridge 0.6.x, or 0.5.x for Laravel 4.0.
+TwigBridge >= 0.13 supports Twig 3. If you need Twig 1/2 support, use the 0.12 versions.
 
 # Installation
 
@@ -20,25 +19,7 @@ composer require rcrowe/twigbridge
 
 # Quick Start
 
-Once Composer has installed or updated your packages you need to register TwigBridge with Laravel itself. Open up config/app.php and find the providers key, towards the end of the file, and add 'TwigBridge\ServiceProvider', to the end:
-
-```php
-'providers' => [
-     ...
-                TwigBridge\ServiceProvider::class,
-],
-```
-
-Now find the aliases key, again towards the end of the file, and add 'Twig' => 'TwigBridge\Facade\Twig', to have easier access to the TwigBridge (or Twig\Environment):
-
-```php
-'aliases' => [
-    ...
-                'Twig' => TwigBridge\Facade\Twig::class,
-],
-```
-
-Now that you have both of those lines added to config/app.php we will use Artisan to add the new twig config file:
+Laravel automatically registers the Service Provider. Use Artisan to publish the twig config file:
 
 ```php
 php artisan vendor:publish --provider="TwigBridge\ServiceProvider"

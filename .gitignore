@@ -21,3 +21,9 @@ vendor
 
 ## Build
 build/
+
+#storage folder for twig compilation tests
+tests/storage
+
+# phpunit
+/.phpunit.result.cache

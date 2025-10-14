@@ -2,20 +2,21 @@
 
 namespace TwigBridge\Tests\Extension\Laravel;
 
-use TwigBridge\Tests\Base;
 use Mockery as m;
+use Twig\Node\Node;
 use TwigBridge\Extension\Laravel\Form;
+use TwigBridge\Tests\Base;
 
 class FormTest extends Base
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }
 
     public function testName()
     {
-        $this->assertInternalType('string', $this->getForm()->getName());
+        $this->assertTrue(is_string($this->getForm()->getName()));
     }
 
     public function testFunctionCallback()
@@ -25,7 +26,7 @@ class FormTest extends Base
 
         $form = new Form($builder);
 
-        $this->assertInternalType('array', $form->getFunctions());
+        $this->assertTrue(is_array($form->getFunctions()));
 
         call_user_func($form->getFunctions()[0]->getCallable(), 'foo_bar');
     }
@@ -35,7 +36,7 @@ class FormTest extends Base
         $form     = $this->getForm();
         $function = $form->getFunctions()[0];
 
-        $this->assertTrue(in_array('html', $function->getSafe(m::mock('Twig_Node'))));
+        $this->assertTrue(in_array('html', $function->getSafe(m::mock(Node::class))));
     }
 
     protected function getForm()

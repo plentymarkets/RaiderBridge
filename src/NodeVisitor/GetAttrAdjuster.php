@@ -21,7 +21,7 @@ class GetAttrAdjuster implements NodeVisitorInterface
     /**
      * @inheritdoc
      */
-    public function enterNode(Node $node, Environment $env)
+    public function enterNode(Node $node, Environment $env): Node
     {
         // Make sure this is a GetAttrExpression (and not a subclass)
         if (get_class($node) !== GetAttrExpression::class) {
@@ -40,18 +40,21 @@ class GetAttrAdjuster implements NodeVisitorInterface
 
         $attributes = [
             'type' => $node->getAttribute('type'),
-            'is_defined_test' => $node->getAttribute('is_defined_test'),
             'ignore_strict_check' => $node->getAttribute('ignore_strict_check'),
             'optimizable' => $node->getAttribute('optimizable'),
         ];
 
-        return new GetAttrNode($nodes, $attributes, $node->getTemplateLine(), $node->getNodeTag());
+        $newNode = new GetAttrNode($nodes, $attributes, $node->getTemplateLine());
+
+        $node->isDefinedTestEnabled() && $newNode->enableDefinedTest();
+
+        return $newNode;
     }
 
     /**
      * @inheritdoc
      */
-    public function leaveNode(Node $node, Environment $env)
+    public function leaveNode(Node $node, Environment $env): ?Node
     {
         return $node;
     }

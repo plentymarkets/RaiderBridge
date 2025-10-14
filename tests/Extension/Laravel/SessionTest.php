@@ -2,20 +2,21 @@
 
 namespace TwigBridge\Tests\Extension\Laravel;
 
-use TwigBridge\Tests\Base;
 use Mockery as m;
+use Twig\Node\Node;
 use TwigBridge\Extension\Laravel\Session;
+use TwigBridge\Tests\Base;
 
 class SessionTest extends Base
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }
 
     public function testName()
     {
-        $this->assertInternalType('string', $this->getSession()->getName());
+        $this->assertTrue(is_string($this->getSession()->getName()));
     }
 
     public function testFunctions()
@@ -23,7 +24,7 @@ class SessionTest extends Base
         $session   = $this->getSession();
         $functions = $session->getFunctions();
 
-        $this->assertInternalType('array', $functions);
+        $this->assertTrue(is_array($functions));
 
         foreach ($functions as $function) {
             if (is_array($function->getCallable())) {
@@ -36,7 +37,7 @@ class SessionTest extends Base
     {
         $session   = $this->getSession();
         $functions = $session->getFunctions();
-        $node      = m::mock('Twig_Node');
+        $node      = m::mock(Node::class);
         $check     = [
             'csrf_token'
         ];

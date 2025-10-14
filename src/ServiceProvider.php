@@ -13,13 +13,15 @@ namespace TwigBridge;
 
 use Illuminate\View\ViewServiceProvider;
 use InvalidArgumentException;
+use Twig\Environment;
 use Twig\Lexer;
 use Twig\Extension\DebugExtension;
 use Twig\Extension\ExtensionInterface;
 use Twig\Extension\EscaperExtension;
+use Twig\Runtime\EscaperRuntime;
 use Twig\Loader\ArrayLoader;
 use Twig\Loader\ChainLoader;
-use Twig_Environment;
+use Twig\RuntimeLoader\ContainerRuntimeLoader;
 
 /**
  * Bootstrap Laravel TwigBridge.
@@ -231,8 +233,11 @@ class ServiceProvider extends ViewServiceProvider
                 );
 
                 foreach ($this->app['config']->get('twigbridge.twig.safe_classes', []) as $safeClass => $strategy) {
-                    $twig->getExtension(EscaperExtension::class)->addSafeClass($safeClass, $strategy);
+                    $twig->getRuntime(EscaperRuntime::class)->addSafeClass($safeClass, $strategy);
                 }
+
+                // Register container-based runtime extension loader
+                $twig->addRuntimeLoader(new ContainerRuntimeLoader($this->app));
 
                 // Instantiate and add extensions
                 foreach ($extensions as $extension) {
@@ -265,7 +270,7 @@ class ServiceProvider extends ViewServiceProvider
             true
         );
 
-        $this->app->alias('twig', Twig_Environment::class);
+        $this->app->alias('twig', Environment::class);
         $this->app->alias('twig', Bridge::class);
 
         $this->app->bindIf('twig.compiler', function () {

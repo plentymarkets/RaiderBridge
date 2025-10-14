@@ -46,6 +46,13 @@ class GetAttrTest extends NodeTestCase
         $object->attr = null;
         $actual = GetAttrNode::attribute($twig, $template->getSourceContext(), $object, "attr", [], Template::ANY_CALL);
         $this->assertEquals(null, $actual);
+
+        $actual = GetAttrNode::attribute($twig, $template->getSourceContext(), $object, "exists");
+        $this->assertEquals(false, $actual);
+
+        $object->exists = true;
+        $actual = GetAttrNode::attribute($twig, $template->getSourceContext(), $object, "exists");
+        $this->assertEquals(true, $actual);
     }
 
     public function testGetAttributeOnModelWithSandbox()
@@ -72,7 +79,7 @@ class GetAttrTest extends NodeTestCase
             );
             $this->fail();
         } catch (SecurityError $e) {
-            $this->assertContains('is not allowed', $e->getMessage());
+            $this->assertTrue(strpos($e->getMessage(), 'is not allowed') !== false);
         }
 
         $object->attr = null;
@@ -91,7 +98,7 @@ class GetAttrTest extends NodeTestCase
             );
             $this->fail();
         } catch (SecurityError $e) {
-            $this->assertContains('is not allowed', $e->getMessage());
+            $this->assertTrue(strpos($e->getMessage(), 'is not allowed') !== false);
         }
     }
 
@@ -115,10 +122,10 @@ class GetAttrTest extends NodeTestCase
         $node = $this->getNode($expr, $attr, $args, Template::ARRAY_CALL);
         $tests[] = [
             $node,
-            '(($__internal_%s = // line 1' . "\n"
+            '(($_v0 = // line 1' . "\n"
                 . '($context["foo"] ?? null))'
-                . ' && is_array($__internal_%s)'
-                . ' || $__internal_%s instanceof ArrayAccess ? ($__internal_%s["bar"] ?? null) : null)',
+                . ' && is_array($_v0)'
+                . ' || $_v0 instanceof ArrayAccess ? ($_v0["bar"] ?? null) : null)',
             null,
             true,
         ];
@@ -130,7 +137,7 @@ class GetAttrTest extends NodeTestCase
         $tests[] = [
             $node,
             sprintf(
-                '%s%s, "bar", [0 => %s, 1 => "bar"], "method", false, false, false, 1)',
+                '%s%s, "bar", [%s, "bar"], "method", false, false, false, 1)',
                 $this->getAttributeGetter(),
                 $this->getVariableGetter('foo', 1),
                 $this->getVariableGetter('foo')
@@ -150,7 +157,6 @@ class GetAttrTest extends NodeTestCase
         $nodes = ['node' => $expr, 'attribute' => $attr, 'arguments' => $args];
         $attributes = [
             'type'                  => $type,
-            'is_defined_test'       => false,
             'ignore_strict_check'   => false,
             'optimizable'           => true
         ];
