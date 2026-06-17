@@ -12,8 +12,6 @@
 namespace RaiderBridge\Command;
 
 use Illuminate\Console\Command;
-use Twig_Environment;
-use Illuminate\Filesystem\Filesystem;
 
 /**
  * Artisan command to clear the Twig cache.
@@ -30,6 +28,11 @@ class Clean extends Command
      */
     protected $description = 'Clean the Twig Cache';
 
+    public function fire()
+    {
+        return $this->handle();
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -39,17 +42,16 @@ class Clean extends Command
         $files    = $this->laravel['files'];
         $cacheDir = $twig->getCache();
 
-        $files->deleteDirectory($cacheDir);
+        if (feature_flag('sbsFixTwigDirectory', false)) {
+            $files->deleteDirectory(storage_path('framework/views/twig'));
+        } else {
+            $files->deleteDirectory($cacheDir);
+        }
 
         if ($files->exists($cacheDir)) {
             $this->error('Twig cache failed to be cleaned');
         } else {
             $this->info('Twig cache cleaned');
         }
-    }
-
-    public function fire()
-    {
-        return $this->handle();
     }
 }
