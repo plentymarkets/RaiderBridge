@@ -28,7 +28,7 @@ class GetAttrNode extends GetAttrExpression
     /**
      * @inheritdoc
      */
-    public function __construct(array $nodes = [], array $attributes = [], int $lineno = 0, string $tag = null)
+    public function __construct(array $nodes = [], array $attributes = [], int $lineno = 0, ?string $tag = null)
     {
         // Skip parent::__construct()
         Node::__construct($nodes, $attributes, $lineno, $tag);
